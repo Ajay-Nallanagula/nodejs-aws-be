@@ -1,0 +1,4 @@
+swagger/**/*
+.esbuild/**/*
+.env
+node_modules
