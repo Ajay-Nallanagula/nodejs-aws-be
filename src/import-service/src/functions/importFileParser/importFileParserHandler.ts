@@ -5,15 +5,16 @@ import { middyfy } from "@libs/lambda";
 const parseImportedCsvFile = async (event) => {
   console.log(event);
   try {
-    const data = await getS3FileObject(event);
-    console.log({ data });
-    return await formatJSONResponse({
+    const response = await getS3FileObject(event);
+    console.log({ response });
+
+    return formatJSONResponse({
       message: "PRODUCTS READ SUCCESSFUL",
-      data,
+      response,
     });
   } catch (error) {
     console.log({ error });
-    return await formatJSONResponse(
+    return formatJSONResponse(
       {
         message: "OOP'S!! something went wrong.",
       },

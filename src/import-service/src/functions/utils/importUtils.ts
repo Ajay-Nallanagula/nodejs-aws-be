@@ -1,8 +1,5 @@
 import * as AWS from "aws-sdk";
 const csv = require("csv-parser");
-//const fs = require("fs");
-import * as fs from "fs";
-//import csv from "csv-parser";
 
 const getS3BucketInstance = () => {
   const region = "ap-south-1";
@@ -44,7 +41,7 @@ const getNameOfNewFileAdded = (event) => {
 
 export const getS3FileObject = async (event) => {
   const s3Bucket = getS3BucketInstance();
-  const fileName = getNameOfNewFileAdded(event);
+  const fileName = getNameOfNewFileAdded(event); //Eg: "uploaded/SampleData_2.csv"
   console.log(`NEW FILE NAME ${fileName}`);
   const params = getS3BucketParams(fileName);
   console.log({ params });
@@ -61,7 +58,7 @@ export const getS3FileObject = async (event) => {
       .pipe(csv())
       .on("data", (data) => {
         console.log("AFTER PIPE CSV()");
-        console.log({ dataSTR: data.toString() });
+        console.log(data);
         results.push(data);
         return results;
       })
@@ -71,7 +68,30 @@ export const getS3FileObject = async (event) => {
       })
       .on("end", () => {
         console.log("CSV SUCCESSFUL EXECUTION:", { results });
-        return resolve(results);
+        return copyUploadedToParsed(event)
+          .then((copyFileData) => {
+            console.log("COPY CSV OPERATION SUCCESSFUL!!!!", { copyFileData });
+            return resolve(results);
+          })
+          .catch((error) => {
+            console.log("COPY catch() entered");
+            return reject(error);
+          });
       });
   });
+};
+
+export const copyUploadedToParsed = (event) => {
+  console.log({ event });
+  const s3Bucket = getS3BucketInstance();
+  const newFilename = getNameOfNewFileAdded(event);
+  const params = getS3BucketParams(newFilename);
+  console.log({ OldParams: params });
+  const newParams = {
+    Bucket: params.Bucket,
+    Key: params.Key.replace("uploaded", "parsed"),
+    CopySource: `/${params.Bucket}/uploaded/`,
+  };
+  console.log({ newParams });
+  return s3Bucket.copyObject(newParams).promise();
 };
