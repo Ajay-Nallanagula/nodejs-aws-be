@@ -69,9 +69,17 @@ export const getS3FileObject = async (event) => {
       .on("end", () => {
         console.log("CSV SUCCESSFUL EXECUTION:", { results });
         return copyUploadedToParsed(event)
-          .then((copyFileData) => {
+          .then(async (copyFileData) => {
             console.log("COPY CSV OPERATION SUCCESSFUL!!!!", { copyFileData });
-            return resolve(results);
+            try {
+              await deleteSourceObject(event);
+              console.log(
+                `Object ${fileName} Deleted after coping to parsed folder`
+              );
+              return resolve(results);
+            } catch (error) {
+              reject(error);
+            }
           })
           .catch((error) => {
             console.log("COPY catch() entered");
@@ -86,7 +94,7 @@ export const copyUploadedToParsed = (event) => {
   const s3Bucket = getS3BucketInstance();
   const newFilename = getNameOfNewFileAdded(event);
   const params = getS3BucketParams(newFilename);
-  console.log({ OldParams: params });
+  console.log({ COPY_OldParams: params });
   const newParams = {
     Bucket: params.Bucket,
     Key: params.Key.replace("uploaded", "parsed"),
@@ -94,4 +102,12 @@ export const copyUploadedToParsed = (event) => {
   };
   console.log({ newParams });
   return s3Bucket.copyObject(newParams).promise();
+};
+
+export const deleteSourceObject = async (event) => {
+  const s3Bucket = getS3BucketInstance();
+  const newFilename = getNameOfNewFileAdded(event);
+  const params = getS3BucketParams(newFilename);
+  console.log({ DELETE_PARAMS: params });
+  return s3Bucket.deleteObject(params).promise();
 };
