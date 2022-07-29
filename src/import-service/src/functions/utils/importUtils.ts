@@ -66,30 +66,24 @@ export const getS3FileObject = async (event) => {
         console.log("CSV() ERROR", err);
         return reject(err);
       })
-      .on("end", () => {
-        console.log("CSV SUCCESSFUL EXECUTION:", { results });
-        return copyUploadedToParsed(event)
-          .then(async (copyFileData) => {
-            console.log("COPY CSV OPERATION SUCCESSFUL!!!!", { copyFileData });
-            try {
-              await deleteSourceObject(event);
-              console.log(
-                `Object ${fileName} Deleted after coping to parsed folder`
-              );
-              return resolve(results);
-            } catch (error) {
-              reject(error);
-            }
-          })
-          .catch((error) => {
-            console.log("COPY catch() entered");
-            return reject(error);
-          });
+      .on("end", async () => {
+        try {
+          console.log("CSV SUCCESSFUL EXECUTION:", { results });
+          const copyFileData = await copyUploadedToParsed(event);
+          console.log("COPY CSV OPERATION SUCCESSFUL!!!!", { copyFileData });
+          await deleteSourceObject(event);
+          console.log(
+            `Object ${fileName} Deleted after coping to parsed folder`
+          );
+          return resolve(results);
+        } catch (error) {
+          reject(error);
+        }
       });
   });
 };
 
-export const copyUploadedToParsed = (event) => {
+export const copyUploadedToParsed = async (event) => {
   console.log({ event });
   const s3Bucket = getS3BucketInstance();
   const newFilename = getNameOfNewFileAdded(event);
