@@ -10,6 +10,7 @@ const serverlessConfiguration: AWS = {
     "serverless-auto-swagger",
     "serverless-offline",
     "serverless-esbuild",
+    "serverless-ssm-fetch",
   ],
   provider: {
     name: "aws",
@@ -34,6 +35,11 @@ const serverlessConfiguration: AWS = {
         Action: ["s3:GetObject", "s3:PutObject"],
         //Resource can also be array, multiple resources ["arn:aws:s3:::node-aws-import-func/*"]
         Resource: "arn:aws:s3:::node-aws-import-func/*",
+      },
+      {
+        Effect: "Allow",
+        Action: ["sqs:SendMessage"],
+        Resource: "arn:aws:sqs:ap-south-1:630402272979:catalogItemsQueue",
       },
     ],
   },
@@ -78,6 +84,9 @@ const serverlessConfiguration: AWS = {
       //typefiles: ["./src/types/product.d.ts"],
       apiType: "http",
       basePath: "/dev",
+    },
+    serverlessSsmFetch: {
+      SQS_QUEUE_URL_VALUE: "/dev/sqs/shopifyAppSSMParameterQueueName",
     },
     client: {},
   },

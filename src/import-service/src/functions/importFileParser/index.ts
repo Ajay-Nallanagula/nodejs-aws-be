@@ -19,5 +19,6 @@ const s3FileParserEvent = {
 
 export default {
   handler,
+  ssmToEnvironment: ["SQS_QUEUE_URL_VALUE"],
   events: [s3FileParserEvent],
 };

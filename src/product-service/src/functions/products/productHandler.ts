@@ -1,7 +1,7 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/apiGateway";
 import { middyfy } from "@libs/lambda";
 import schema from "../../types/schema";
-import { buildProductResponse } from "./utils/productUtils";
+import { buildProductResponse } from "../utils/productUtils";
 
 const productHandler: ValidatedEventAPIGatewayProxyEvent<
   typeof schema
