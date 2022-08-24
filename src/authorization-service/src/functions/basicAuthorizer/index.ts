@@ -1,0 +1,24 @@
+import { handlerPath } from "@libs/handler-resolver";
+
+const handler = `${handlerPath(
+  __dirname
+)}/basicAuthorizerHandler.basicAuthorizerHandlerMiddyFied`;
+
+// const s3FileParserEvent = {
+//   s3: {
+//     bucket: "node-aws-import-func",
+//     existing: true,
+//     event: "s3:ObjectCreated:*",
+//     rules: [
+//       {
+//         prefix: "uploaded/",
+//       },
+//     ],
+//   },
+// };
+
+export default {
+  handler,
+  // ssmToEnvironment: ["SQS_QUEUE_URL_VALUE"],
+  //events: [s3FileParserEvent],
+};

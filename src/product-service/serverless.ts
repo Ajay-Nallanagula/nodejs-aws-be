@@ -22,11 +22,11 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
-      host: "<host>",
-      port: "<Port>",
-      database: "<db>",
-      user: "<user>",
-      password: "<pwd>",
+      host: "nodeawscloudxdbinstance.cade97gkpbmo.ap-south-1.rds.amazonaws.com",
+      port: "5432",
+      database: "nodeawscloudxshopifydb",
+      user: "ajaynallanagula",
+      password: "9Feburary198^",
       SQS_QUEUE_URL: { Ref: "CatalogItemsQueue" },
       SNS_PRODUCTTOPIC_ARN: {
         "Fn::Join": [
