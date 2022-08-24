@@ -1,6 +1,0 @@
-export const HTTPSTATUSCODES = {
-    OK: 200,
-    UNAUTH: 401,
-    INTERNALERROR: 500,
-    FORBIDDEN: 403,
-  };
