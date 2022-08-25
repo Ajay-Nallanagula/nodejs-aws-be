@@ -16,7 +16,12 @@ const basicAuthorizerHandler = async (event) => {
     }
 
     if (!isTokenValid(authorizationToken)) {
-      return generatePolicy("ProdOwnerAjay", "Deny", methodArn);
+      return formatJSONResponse(
+        {
+          message: `FORBIDDEN, WRONG CREDENTIALS`,
+        },
+        HTTPSTATUSCODES.FORBIDDEN
+      );
     }
     console.log("************ SUCCESS *****************");
     console.log({ methodArn });
