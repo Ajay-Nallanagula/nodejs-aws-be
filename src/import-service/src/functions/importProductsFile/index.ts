@@ -11,7 +11,7 @@ const httpImportGet = {
     cors: true,
     authorizer: {
       type: "token",
-      arn: "arn:aws:lambda:ap-south-1:630402272979:function:basic-authorization-service-dev-basicAuthorizer",
+      arn: "arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:basic-authorization-service-dev-basicAuthorizer",
       resultTtlInSeconds: 0,
       //identitySource: method.request.header.Authorization //Another header can be choosen, instead of token
     },
